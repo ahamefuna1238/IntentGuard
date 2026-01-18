@@ -330,17 +330,16 @@ public final class IntentGuardManager {
      */
     public IntentGuardManager setResultListener(@Nullable ResultListener resultListener) {
         this.mResultListener = resultListener;
-        mIntentProcessor.setResultListener(resultListener);
+        this.mIntentProcessor.setResultListener(resultListener);
 
-        if (mRequestListener != null){
-            //Check if the default manager is in use
-            if (mAccessManager instanceof DefaultAccessManager){
-                ((DefaultAccessManager) mAccessManager).setResultListener(mResultListener);
-            }
+        //Check if the default manager is in use
+        if (this.mAccessManager instanceof DefaultAccessManager){
+            ((DefaultAccessManager) this.mAccessManager).setResultListener(mResultListener);
         }
 
         return this;
     }
+
 
     /**
      * Attaches a listener to receive the raw intent when the request is validated.
@@ -601,16 +600,16 @@ public final class IntentGuardManager {
 
                 parsePermissions(requestIntent, requestPermissionList, mPermissionAvailable);
 
-                //Show the auth dialog.
-
-
             }else {
                 if (!mAuthDialogBuilder.areAllButtonsRegistered()){
                     throw new RuntimeException("Using custom layout requires you to register both (acceptButton and cancelButton).");
                 }
 
-                //Show the auth dialog.
             }
+
+            Log.d(DEBUG_NAME, "Incoming secure intent request - show auth dialog");
+
+            //Show the auth dialog.
             if (!mAuthDialogBuilder.isShowing()){
                 mAuthDialogBuilder.showAuthDialog();
             }
@@ -789,16 +788,15 @@ public final class IntentGuardManager {
 
                 parsePermissions(requestIntent, requestPermissionList, mPermissionAvailable);
 
-                //Show the auth dialog.
-
             }else {
                 if (!mAuthDialogBuilder.areAllButtonsRegistered()){
                     throw new RuntimeException("Using custom layout requires you to register both (acceptButton and cancelButton).");
                 }
-
-                //Show the auth dialog.
-
             }
+
+            Log.d(DEBUG_NAME, "Incoming secure intent request - show auth dialog");
+
+            //Show the auth dialog.
             if (!mAuthDialogBuilder.isShowing()){
                 mAuthDialogBuilder.showAuthDialog();
             }

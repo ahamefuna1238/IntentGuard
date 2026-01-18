@@ -116,7 +116,7 @@ public final class IntentProcessor {
         Bundle responseBody = mAccessManager.getResponseBody();
 
         if (requestToken != null){
-            Log.d(DEBUG_NAME, "Token present — sending authenticated response");
+            Log.d(DEBUG_NAME, "Token present — sending authenticated response with session ( " + requestToken + " )");
             responseIntent.putExtra(Metadata.REQUEST_TOKEN.getKey(), requestToken);
             responseIntent.putExtra(Metadata.RESPONSE_BODY.getKey(), responseBody);
         } else {

@@ -2,6 +2,8 @@ package com.activities.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import androidx.core.view.MenuProvider;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.android.material.button.MaterialButton;
 import com.intent.guard.IntentGuardManager;
 import com.intent.guard.RequestListener;
 import com.intent.guard.core.Metadata;
@@ -45,6 +48,9 @@ public class MainActivity2 extends AppCompatActivity implements RequestListener 
      */
     private IntentGuardManager intentGuardManager;
 
+    private MaterialButton sendReponse;
+    private TextView requestText;
+
     /**
      * Initializes the provider activity and sets up the security environment.
      * <p>
@@ -60,27 +66,25 @@ public class MainActivity2 extends AppCompatActivity implements RequestListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
-        // 1. Configure the Manager: Restrict to trusted apps and set the request listener
-        intentGuardManager = new IntentGuardManager(this, null)
-                .enforceTrustedAppOnly(true)
-                .addTrustedApp(getPackageName())
-                .setRequestListener(this);
+        requestText =  findViewById(R.id.requestText);
+        sendReponse = findViewById(R.id.response);
 
-        // 2. Define Permission Metadata: These descriptions appear in the Rationale Dialog
-        // when the requesting app asks for these specific strings.
         RequestPermission.getInstance()
                 .definePermissionInfo("com.permission.userId",
                         PermissionInfo.builder()
-                                .setImage(R.mipmap.ic_launcher_round)
+                                .setImage(R.drawable.ic_launcher_foreground)
                                 .setText("User Identity Access: Required to verify your profile information.").build())
                 .definePermissionInfo("com.permission.user.account.balance",
-                        new PermissionInfo(R.mipmap.ic_launcher_round,
+                        new PermissionInfo(R.drawable.ic_launcher_foreground,
                                 "Financial Data: Required to view account balances for transaction processing."));
 
-        // 3. Initiate Handshake: Intercept the incoming intent, verify the caller,
-        // and show the BottomSheet rationale.
+
+        intentGuardManager = new IntentGuardManager(this, null)
+                .addTrustedApp(getPackageName())
+                .setRequestListener(this);
+
         intentGuardManager.awaitRequest();
     }
 
@@ -107,39 +111,63 @@ public class MainActivity2 extends AppCompatActivity implements RequestListener 
             Bundle bundle = intent.getBundleExtra(Metadata.REQUEST_BODY.getKey());
 
             if (bundle != null) {
+
                 if (bundle.containsKey("metadata")) {
-                    int num = bundle.getInt("number");
-                    String request = bundle.getString("request");
+
                     Bundle metadata = bundle.getBundle("metadata");
 
                     if (metadata != null) {
                         String str = metadata.getString("data");
-                        Toast.makeText(this, "Secure Data Received: " + str, Toast.LENGTH_SHORT).show();
+                        requestText.setText(String.format("Secure Request Received: %s", str));
                     }
                 }
             }
 
+            // Setup the response trigger: When the user clicks the button, send a secure
+            // result back to the Requester app.
+            sendReponse.setOnClickListener(view -> {
+                Bundle responseBundle = new Bundle();
+                responseBundle.putString("response", "Secure Response status : Success");
+
+                intentGuardManager.setResponse(responseBundle)
+                        .sendResponse();
+            
+            });
         }
         // Handling DEFAULT_TYPE: Fallback for non-secure standard communication
         else if (intentType == DEFAULT_TYPE) {
             Bundle bundle = intent.getBundleExtra(Metadata.REQUEST_BODY.getKey());
-            String string = (bundle != null && bundle.containsKey("data")) ? bundle.getString("data") : "null request";
-            Toast.makeText(MainActivity2.this, "Default Data Received: " + string, Toast.LENGTH_SHORT).show();
+
+            if (bundle != null){
+                if (bundle.containsKey("metadata")){
+
+                    Bundle metadata = bundle.getBundle("metadata");
+
+                    if (metadata != null) {
+                        String str = metadata.getString("data");
+                        requestText.setText(String.format("Default Data Received: %s", str));
+                    }
+
+                }
+            }
+
+            // Setup the response trigger: When the user clicks the button, send a secure
+            // result back to the Requester app.
+            sendReponse.setOnClickListener(view -> {
+                Bundle responseBundle = new Bundle();
+                responseBundle.putString("response", "Default Response status : Success");
+
+                Log.d(this.getClass().getSimpleName(),"Default Response status : Success");
+
+                intentGuardManager.setResponse(responseBundle)
+                        .sendResponse();
+            });
         }
         // Handling UNKNOWN_TYPE: Security violation or missing metadata
         else if (intentType == UNKNOWN_TYPE) {
             Toast.makeText(MainActivity2.this, "Request body not found or unverified", Toast.LENGTH_SHORT).show();
         }
 
-        // Setup the response trigger: When the user clicks the button, send a secure
-        // result back to the Requester app.
-        findViewById(R.id.click).setOnClickListener(view -> {
-            Bundle responseBundle = new Bundle();
-            responseBundle.putString("response", "success");
-
-            intentGuardManager.setResponse(responseBundle)
-                    .sendResponse();
-        });
     }
 
     /**

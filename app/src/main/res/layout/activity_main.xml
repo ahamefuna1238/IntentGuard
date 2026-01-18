@@ -8,11 +8,24 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/responseText"
+        android:layout_margin="8dp"/>
+
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/click"
+        android:id="@+id/secureRequest"
         android:layout_gravity="center"
-        android:text="Click Me"/>
+        android:text="Send secure request"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/defaultRequest"
+        android:layout_gravity="center"
+        android:text="Send default request"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

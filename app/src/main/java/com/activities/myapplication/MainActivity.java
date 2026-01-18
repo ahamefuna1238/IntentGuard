@@ -2,7 +2,8 @@ package com.activities.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.google.android.material.button.MaterialButton;
 import com.intent.guard.IntentGuardManager;
 import com.intent.guard.ResultListener;
 import com.intent.guard.auth.AuthException;
+import com.intent.guard.core.Metadata;
 import com.intent.guard.request.IntentRequest;
 
 import java.util.ArrayList;
@@ -47,10 +49,7 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
      */
     private IntentGuardManager intentGuardManager;
 
-    /**
-     * UI trigger used to initiate the secure request process.
-     */
-    private MaterialButton materialButton;
+    private TextView responseText;
 
     /**
      * Initializes the Activity, sets up the UI, and configures the IntentGuard security layer.
@@ -68,24 +67,43 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        materialButton = findViewById(R.id.click);
+        responseText = findViewById(R.id.responseText);
+        MaterialButton defaultRequestButton = findViewById(R.id.defaultRequest);
+        MaterialButton secureRequestButton = findViewById(R.id.secureRequest);
 
         // Initialize the manager using the default access manager and library layout
         intentGuardManager = new IntentGuardManager(this, null);
 
-        // Configure the security policy: enable secure handshake and attach the callback listener
         intentGuardManager
-                .secureRequest(true)
                 .setResultListener(this);
 
-        // Logic for triggering a secure outgoing request
-        materialButton.setOnClickListener(view -> {
+        defaultRequestButton.setOnClickListener(view -> {
             // Define the target component (The "Provider" application)
             Intent intent = new Intent(this, MainActivity2.class);
 
             // Mock sensitive payload
             Bundle bundle = new Bundle();
-            bundle.putString("data", "Request data");
+            bundle.putString("data", "Default Request data");
+
+            // Build the default request object
+            IntentRequest intentRequest = new IntentRequest(intent)
+                    .putBundle("metadata", bundle);
+
+            // Dispatch the intent with a specific request code for identification
+            intentGuardManager
+                    .secureRequest(false)
+                    .setRequestCode(900)
+                    .sendRequest(intentRequest);
+        });
+
+        // Logic for triggering a secure outgoing request
+        secureRequestButton.setOnClickListener(view -> {
+            // Define the target component (The "Provider" application)
+            Intent intent = new Intent(this, MainActivity2.class);
+
+            // Mock sensitive payload
+            Bundle bundle = new Bundle();
+            bundle.putString("data", "Secure Request data");
 
             // Define the list of permissions being claimed for this session
             ArrayList<String> arrayList = new ArrayList<>();
@@ -95,13 +113,12 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
             // Build the secure request object
             IntentRequest intentRequest = new IntentRequest(intent)
                     .putBundle("metadata", bundle)
-                    .putString("request", "String request")
-                    .putInt("number", 1234567898)
                     .setRequestPermissions(arrayList);
 
             // Dispatch the intent with a specific request code for identification
             intentGuardManager
-                    .setRequestCode(9)
+                    .secureRequest(true)
+                    .setRequestCode(901)
                     .sendRequest(intentRequest);
         });
     }
@@ -121,6 +138,14 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("GuardDebug", "onActivityResult triggered. Code: " + requestCode + " Result: " + resultCode);
+
+        if (data != null) {
+            String receivedToken = data.getStringExtra(Metadata.REQUEST_TOKEN.getKey());
+            Log.d("GuardDebug", data.getExtras().toString());
+        }
+
         // Pass result to the manager for processing
         intentGuardManager.registerActivityResult(requestCode, resultCode, data);
     }
@@ -133,8 +158,11 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
      */
     @Override
     public void onResultReceived(@Nullable Bundle resultBody) {
+
+        Log.d("Requester Result Received", String.valueOf(resultBody));
+
         String msg = (resultBody != null) ? resultBody.getString("response") : "null response";
-        Toast.makeText(MainActivity.this, resultBody.getString("response"), Toast.LENGTH_SHORT).show();
+        responseText.setText(msg);
     }
 
     /**
@@ -148,9 +176,9 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
     @Override
     public void onCancelled(int reason) {
         if (reason == AuthException.TOKEN_EXPIRED) {
-            Toast.makeText(this, "Expired token", Toast.LENGTH_SHORT).show();
+            responseText.setText("Expired token");
         } else {
-            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+            responseText.setText("Cancelled");
         }
     }
 

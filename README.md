@@ -7,8 +7,8 @@
 
 
 `IntentGuardManager` IntentGuard is a security-first Android library designed to simplify and harden Inter-Process Communication (IPC).
-By acting as a facade between raw Intents and your application logic, it automates the verification of calling applications
-via certificate fingerprints and enforces one-time session tokens to prevent replay attacks.
+By acting as a facade between raw Intents and your application logic, it automates the verification of calling applications 
+via certificate fingerprints and enforces one-time session tokens to prevent replay attacks. 
 Built with Material 3, it provides a seamless user experience for permission rationales and secure data handshakes.
 
 ---
@@ -145,13 +145,13 @@ public class ProviderActivity extends AppCompatActivity implements RequestListen
 ```
 
 ## 🎨 UI Customization
-The library uses Material 3 (Material You). You can customize the dialog
+The library uses Material 3 (Material You). You can customize the dialog 
 content or provide an entirely custom layout.
 
 ```java
 
 public class M {
-
+    
     public void test(){
         DialogInfo info = new DialogInfo(
                 "Secure Connection Requested",
