@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="m_requester_name_available_request_header">
+        <b>($requesterAppName)</b> is requesting access to your data.</string>
+
+    <string name="m_requester_name_unavailable_request_header">
+        Requesting access to your data.
+    </string>
+
+    <string name="m_trusted_requester_name_unavailable_requesting_description">
+        We need some information\'s and some actions are required from you.
+    </string>
+
+    <string name="m_trusted_requester_name_available_requesting_description">
+        ($requesterAppName) need some information\'s and some actions are required from you.
+    </string>
+
+    <string name="m_untrusted_requester_name_available_requesting_in_secure_mode_description">
+        An untrusted app is requesting for your data proceed with caution.
+        <b>($requesterAppName)</b>
+    </string>
+
+    <string name="m_untrusted_requester_name_unavailable_requesting_in_secure_mode_description">
+        The app requesting for your data is not trusted proceed with caution.
+    </string>
+
+    <string name="m_cancel_text">Cancel Request</string>
+    <string name="m_approve_trusted_text">Approve Request</string>
+    <string name="m_approve_untrusted_text">Allow anyway</string>
+    <string name="m_auth_permission_image_content_description">Permission Image.</string>
+    <string name="m_permission">Permission</string>
+</resources>
