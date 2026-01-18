@@ -3,6 +3,8 @@
 [![Android SDK](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
 [![M3](https://img.shields.io/badge/Material-3-7C4DFF?style=for-the-badge)](https://m3.material.io)
+[![Release](https://jitpack.io/v/ahamefuna1238/IntentGuard.svg)](https://jitpack.io/#ahamefuna1238/IntentGuard)
+
 
 `IntentGuardManager` IntentGuard is a security-first Android library designed to simplify and harden Inter-Process Communication (IPC).
 By acting as a facade between raw Intents and your application logic, it automates the verification of calling applications 
@@ -41,7 +43,7 @@ Add the dependency to your module-level build.gradle.kts:
 ```kotlin
 
 dependencies {
-    implementation("com.github.ahamefuna1238.IntentGuard:intent-guard:1.0.0")
+    implementation("com.github.ahamefuna1238:IntentGuard:v1.0")
 }
 
 ```
