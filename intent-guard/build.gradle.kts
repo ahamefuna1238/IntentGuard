@@ -41,11 +41,7 @@ afterEvaluate {
 
                 groupId = "com.github.ahamefuna1238"
                 artifactId = "intent-guard"
-<<<<<<< HEAD
                 version = "1.0.1"
-=======
-                version = "v1.0"
->>>>>>> b6075883c7f9cf6277f9335702f1cbe04cde6989
             }
         }
     }

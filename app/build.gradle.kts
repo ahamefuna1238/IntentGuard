@@ -39,5 +39,5 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:2.8.7")
     implementation(project(mapOf("path" to ":intent-guard")))
     implementation(project(mapOf("path" to ":intent-guard")))
-//    implementation("com.github.ahamefuna1238:IntentGuard:v1.0")
+//    implementation("com.github.ahamefuna1238:IntentGuard:v1.0.1")
 }
