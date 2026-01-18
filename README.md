@@ -7,9 +7,13 @@
 
 
 `IntentGuardManager` IntentGuard is a security-first Android library designed to simplify and harden Inter-Process Communication (IPC).
-By acting as a facade between raw Intents and your application logic, it automates the verification of calling applications 
-via certificate fingerprints and enforces one-time session tokens to prevent replay attacks. 
+By acting as a facade between raw Intents and your application logic, it automates the verification of calling applications
+via certificate fingerprints and enforces one-time session tokens to prevent replay attacks.
 Built with Material 3, it provides a seamless user experience for permission rationales and secure data handshakes.
+
+
+## 📺 Demo
+![IntentGuard Secure Handshake](media/demo.gif)
 
 ---
 
@@ -43,8 +47,13 @@ Add the dependency to your module-level build.gradle.kts:
 ```kotlin
 
 dependencies {
+<<<<<<< Updated upstream
   implementation("com.github.ahamefuna1238:IntentGuard:v1.0.1")
    implementation("com.github.ahamefuna1238:IntentGuard:v1.0")
+=======
+    implementation("com.github.ahamefuna1238:IntentGuard:v1.0.1")
+    implementation("com.github.ahamefuna1238:IntentGuard:v1.0")
+>>>>>>> Stashed changes
 }
 
 ```
@@ -66,10 +75,10 @@ This allows the library to intercept and verify returning session tokens.
 ````java
 
 public class MainActivity extends AppCompatActivity implements ResultListener {
-    
+
     private void sendSecureRequest() {
         Intent target = new Intent(this, ProviderActivity.class);
-        
+
         ArrayList<String> perms = new ArrayList<>();
         perms.add("com.permission.userId");
 
@@ -93,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
         intentGuardManager.registerActivityResult(requestCode, resultCode, data);
     }
 
-    @Override 
+    @Override
     public void onResultReceived(@Nullable Bundle resultBody) {
         // Securely handle data returned from the provider
         if (resultBody != null) {
@@ -101,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements ResultListener {
         }
     }
 
-    @Override 
-    public void onCancelled(int reason) { 
+    @Override
+    public void onCancelled(int reason) {
         // reason: AuthException.TOKEN_EXPIRED, USER_DENIED, etc.
     }
 }
@@ -118,10 +127,10 @@ public class ProviderActivity extends AppCompatActivity implements RequestListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Define metadata for requested permissions (shown in the rationale dialog)
         RequestPermission.getInstance().definePermissionInfo("com.permission.userId",
-            new PermissionInfo(R.mipmap.ic_launcher_round, "Allows access to your ID for profile verification."));
+                new PermissionInfo(R.mipmap.ic_launcher_round, "Allows access to your ID for profile verification."));
 
         intentGuardManager
                 .setRequestListener(this)
@@ -133,11 +142,11 @@ public class ProviderActivity extends AppCompatActivity implements RequestListen
         if (intentType == SECURE_TYPE) {
             // Data is extracted from the Metadata.REQUEST_BODY key
             Bundle body = intent.getBundleExtra(Metadata.REQUEST_BODY.getKey());
-            
+
             // Build and return secure response
             Bundle res = new Bundle();
             res.putString("response", "Success: Data Accessed");
-            
+
             intentGuardManager.setResponse(res).sendResponse();
         }
     }
@@ -146,13 +155,13 @@ public class ProviderActivity extends AppCompatActivity implements RequestListen
 ```
 
 ## 🎨 UI Customization
-The library uses Material 3 (Material You). You can customize the dialog 
+The library uses Material 3 (Material You). You can customize the dialog
 content or provide an entirely custom layout.
 
 ```java
 
 public class M {
-    
+
     public void test(){
         DialogInfo info = new DialogInfo(
                 "Secure Connection Requested",
