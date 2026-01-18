@@ -43,11 +43,8 @@ Add the dependency to your module-level build.gradle.kts:
 ```kotlin
 
 dependencies {
-<<<<<<< HEAD
-    implementation("com.github.ahamefuna1238:IntentGuard:v1.0.1")
-=======
-    implementation("com.github.ahamefuna1238:IntentGuard:v1.0")
->>>>>>> b6075883c7f9cf6277f9335702f1cbe04cde6989
+  implementation("com.github.ahamefuna1238:IntentGuard:v1.0.1")
+   implementation("com.github.ahamefuna1238:IntentGuard:v1.0")
 }
 
 ```
